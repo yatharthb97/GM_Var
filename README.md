@@ -17,22 +17,23 @@ Layout of the code:
 Important Points:
 + A unique name has to be parsed in the ARGS. Or the files append to the Parent Path given to the program.
 + The program creates a directory with the provided Run Name
-+ Multiple iterations can be performed by changing the parameters - in the iteration block. (Director Name Run_Name_i &#8594; i is the $i^{th}$ iteration)
++ Multiple iterations can be performed by changing the parameters - in the iteration block. (Director Name Run_Name_i &#8594; i is the i<sup>th</sup> iteration)
 
 Different Plots Generated are:
 
-![No of Seats Won by Minority - Histogram](./READ_ME Samples/freqhist.png)
-![Successful Swaps for Every Constituency](./READ_ME Samples/swap_plot.png)
-![Scatter Plot - Variance v Fractional Variance](./READ_ME Samples/point5_10^7me_4_0_varvfracvar.png)
+![No of Seats Won by Minority - Histogram](https://github.com/yatharthb97/GM_Var/blob/master/READ_ME%20Samples/freqhist.png?raw=true)
+![Successful Swaps for Every Constituency](https://github.com/yatharthb97/GM_Var/blob/master/READ_ME%20Samples/swap_plot.png?raw=true)
+![Scatter Plot - Variance v Fractional Variance](https://github.com/yatharthb97/GM_Var/blob/master/READ_ME%20Samples/point5_10%5E7me_4_0_varvfracvar.png?raw=true)
 
 
-![Min_Max_Mean_Diff - Fractional Variance v No of Seats Won](./READ_ME Samples/Frac_var.png)
-![[Min_Max_Mean_Diff - Fractional Variance v No of Seats Won](./READ_ME Samples/varplots.png)
+![Min_Max_Mean_Diff - Fractional Variance v No of Seats Won](https://github.com/yatharthb97/GM_Var/blob/master/READ_ME%20Samples/Frac_var.png?raw=true)
+![Min_Max_Mean_Diff - Variance v No of Seats Won](https://github.com/yatharthb97/GM_Var/blob/master/READ_ME%20Samples/Frac_var.png?raw=true)
 
 
-![Seats Won_Lost Avg per Constituency](./READ_ME Samples/wonlost.png)
-![Seat Population Distribution - Averaged](./READ_ME Samples/minmaj.png)
+![Seats Won_Lost Avg per Constituency](https://github.com/yatharthb97/GM_Var/blob/master/READ_ME%20Samples/wonlost.png?raw=true)
+![Seat Population Distribution - Averaged](https://github.com/yatharthb97/GM_Var/blob/master/READ_ME%20Samples/minmaj.png?raw=true)
 
 
-![Number of times Zero Variance was recorded for Fractional Variance Plots](./READ_ME Samples/zerofracvarhist.png)
-![Number of times Zero Variance was recorded for Variance Plots](./READ_ME Samples/zerovarhist.png)
+![Number of times Zero Variance was recorded for Fractional Variance Plots](https://github.com/yatharthb97/GM_Var/blob/master/READ_ME%20Samples/zerofracvarhist.png?raw=true)
+![Number of times Zero Variance was recorded for Variance Plots](https://github.com/yatharthb97/GM_Var/blob/master/READ_ME%20Samples/zerovarhist.png?raw=true)
+

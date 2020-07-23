@@ -18,8 +18,11 @@ Important Points:
 + A unique name has to be parsed in the ARGS. Or the files append to the Parent Path given to the program.
 + The program creates a directory with the provided Run Name
 + Multiple iterations can be performed by changing the parameters - in the iteration block. (Director Name Run_Name_i &#8594; i is the i<sup>th</sup> iteration)
++ Used Ranlux48 base generator as PRNG.
++ For Seeding Random Number Generator - System Entropy is used.
++ Make file - "make" -  to compile; "make clean" - to clean files
 
-Different Plots Generated are:
+Different Plots Generated (Typical Run):
 
 ![No of Seats Won by Minority - Histogram](https://github.com/yatharthb97/GM_Var/blob/master/READ_ME%20Samples/freqhist.png?raw=true)
 ![Successful Swaps for Every Constituency](https://github.com/yatharthb97/GM_Var/blob/master/READ_ME%20Samples/swap_plot.png?raw=true)
@@ -37,3 +40,5 @@ Different Plots Generated are:
 ![Number of times Zero Variance was recorded for Fractional Variance Plots](https://github.com/yatharthb97/GM_Var/blob/master/READ_ME%20Samples/zerofracvarhist.png?raw=true)
 ![Number of times Zero Variance was recorded for Variance Plots](https://github.com/yatharthb97/GM_Var/blob/master/READ_ME%20Samples/zerovarhist.png?raw=true)
 
+--------------------------------------------------------------------
+***

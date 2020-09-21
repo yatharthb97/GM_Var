@@ -1,17 +1,19 @@
-/* mmm  m    m        m    m   mm   mmmmm	|	Developed by: Yatharth Bhasin
- m"   " ##  ##        "m  m"   ##   #   "#  |	Discipline of Physics
- #   mm # ## #         #  #   #  #  #mmmm"  |	IIT Indore
- #    # # "" #         "mm"   #mm#  #   "m  |	(yatharth1997@gmail.com)
-  "mmm" #    #          ##   #    # #    "  |	(git: yatharthb97)
-  											|	Licence: *******************
-              """"""
+
+  /*$$$$$  /$$      /$$ /$$    /$$                    |Developed by: Yatharth Bhasin
+ /$$__  $$| $$$    /$$$| $$   | $$                    |Discipline of Physics
+| $$  \__/| $$$$  /$$$$| $$   | $$ /$$$$$$   /$$$$$$  |IIT Indore
+| $$ /$$$$| $$ $$/$$ $$|  $$ / $$/|____  $$ /$$__  $$ |(yatharth1997@gmail.com)
+| $$|_  $$| $$  $$$| $$ \  $$ $$/  /$$$$$$$| $$  \__/ |(git: yatharthb97)
+| $$  \ $$| $$\  $ | $$  \  $$$/  /$$__  $$| $$       |Licence: *******************
+|  $$$$$$/| $$ \/  | $$   \  $/  |  $$$$$$$| $$		  |
+ \______/ |__/     |__/====\_/    \_______/|_*/  	//|
 //---------------------------------------------------------------------------------
 
 //Gerrymandering Variance Analysis - GM_VAR v1.0
-//-----------------------------------------------------------------------------------
-//		+++ Notes - InComplete, +++ Status - Not Tested
-//-----------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------
 
+//		+++ Notes - InComplete, +++ Status - Not Tested
+//---------------------------------------------------------------------------------
 
 /*Notes
 
@@ -26,12 +28,16 @@
 #include <chrono>
 #include <iomanip>
 
+#include "timer.h"
+#include "densityplot.h"
 #include "var_minmax.h"
 #include "constituency.h"
 #include "random.h"
 #include "main.h"
+#include "macros.h"
 using namespace std;
 using namespace std::chrono;
+//#define __DENSITY_PLOT__
 
 //global declarations
 int Constituency::counter = 0; //Counter initialization
@@ -39,8 +45,8 @@ int Constituency::counter = 0; //Counter initialization
 ////////////////////////////////Global Paramaters/////////////////////
 string parent_path_gl = "/mnt/m/Gerry_Study/Results/";
 
-int iterations = 5;
-int total_measurements = 10000000;
+int iterations = 1;
+int total_measurements = 10000;
 float frac_minority = 0.5;
 double swap_parameter = 1.0; //0.0-0.5
 int total_pop = 1000;
@@ -110,6 +116,9 @@ if(MakeDir(newpath))
 			  << "Majority population: " << tot_maj << "\n"
 			  << "Total Measurements: " << total_measurements << "\n"
 			  << "Parent Path: " << parent_path << "\n"
+			  #ifdef __DENSITY_PLOT__
+			  	<< "Density Color Plot is set!" << "\n"
+			  #endif
 			  << "-------------------------------------------------------" << std::endl;
 
 ////////////////////////////////Print Information/////////////////////
@@ -129,7 +138,7 @@ if(MakeDir(newpath))
 	//std::vector<pair<int, double>> seat_var_list;
 	VarTable var(con_matrix_size+1); //VarTable for minority variance 
 	VarTable fracvar(con_matrix_size+1); //VarTable for fraction of minority variance
-	int swap_matrix[con_matrix_size] = {0}; //For Storing Swaps
+	long int swap_matrix[con_matrix_size] = {0}; //For Storing Swaps
 
 	int won_matrix[con_matrix_size] = {0};
 	int lost_matrix[con_matrix_size] = {0};
@@ -144,8 +153,11 @@ if(MakeDir(newpath))
 	{
 		cerr << "Error - Uniform Majority is higher than lowest Constituency Size - Constituency Overflow Expected!" << endl;
 	}
-	
-	
+	#ifdef __DENSITY_PLOT__
+		cout << "**********" << endl;
+		double* _varince = new double[total_measurements]();
+		double* frac_varince = new double[total_measurements]();
+	#endif
 
 ////////////////////////////////Run Scope Resources/////////////////////
 
@@ -334,8 +346,13 @@ if(MakeDir(newpath))
 		fracvar.Push(min_win, fracvariance); //Update Table
 
 		//Update buffer for variance v fracvariance plot
-		buffer2 << setprecision(10) << variance << ":" << fracvariance <<"\n";
 
+		buffer2 << setprecision(10) << variance << ":" << fracvariance <<"\n";
+		
+		#ifdef __DENSITY_PLOT__
+			_varince[mm] = variance;
+			frac_varince[mm] = fracvariance;
+		#endif
 
 		if(printinfo)
 		{
@@ -405,6 +422,20 @@ if(MakeDir(newpath))
 	file3 << buffer3.str(); 
 	file3.close();
 
+	#ifdef __DENSITY_PLOT__
+		//Color density plot
+		int Bins = 10;
+		double Delta = 100; //Divide 1 Bin into Delta parts for sorting.
+		{
+			Timer colordensity("Color Density Plot");
+			DensityColorPlot(_varince, frac_varince,
+						  total_measurements, Bins, Delta, parent_path, run_name);
+		}
+
+		//Freeing Memory
+		delete[] _varince;
+		delete[] frac_varince;
+	#endif
 /////////Generate Files/////////////////////////////////
 
 

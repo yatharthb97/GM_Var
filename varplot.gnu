@@ -16,8 +16,8 @@ set title "Fractional Variance Plots"
 set xrange [0:25]
 set xtics 1
 
-set grid ytics lt 0 lw 1 lc rgb "#bbbbbb"
-set grid xtics lt 0 lw 1 lc rgb "#bbbbbb"
+set grid ytics lt 1 lw 1 lc rgb "#bbbbbb"
+set grid xtics lt 1 lw 1 lc rgb "#bbbbbb"
 
 set xlabel "Minority Seats Won"
 set ylabel "Fractional Variance"
@@ -46,8 +46,8 @@ set title "Variance Plots"
 set xrange [0:25]
 set xtics 1
 
-set grid ytics lt 0 lw 1 lc rgb "#bbbbbb"
-set grid xtics lt 0 lw 1 lc rgb "#bbbbbb"
+set grid ytics lt 1 lw 1 lc rgb "#bbbbbb"
+set grid xtics lt 1 lw 1 lc rgb "#bbbbbb"
 
 set xlabel "Minority Seats Won"
 set ylabel "Variance"
@@ -80,8 +80,8 @@ set xtics 1
 set xlabel "Minority Seats"
 set ylabel "Frequency"
 
-set grid ytics lt 0 lw 1 lc rgb "#bbbbbb"
-set grid xtics lt 0 lw 1 lc rgb "#bbbbbb"
+set grid ytics lt 1 lw 1 lc rgb "#bbbbbb"
+set grid xtics lt 1 lw 1 lc rgb "#bbbbbb"
 
 set boxwidth 0.9
 set style fill solid
@@ -109,8 +109,8 @@ set xtics 1
 set xlabel "Minority Seats Won"
 set ylabel "Frequency"
 
-set grid ytics lt 0 lw 1 lc rgb "#bbbbbb"
-set grid xtics lt 0 lw 1 lc rgb "#bbbbbb"
+set grid ytics lt 1 lw 1 lc rgb "#bbbbbb"
+set grid xtics lt 1 lw 1 lc rgb "#bbbbbb"
 
 set boxwidth 0.9
 set style fill solid
@@ -137,11 +137,79 @@ set xtics 1
 set xlabel "Minority Seats Won"
 set ylabel "Frequency"
 
-set grid ytics lt 0 lw 1 lc rgb "#bbbbbb"
-set grid xtics lt 0 lw 1 lc rgb "#bbbbbb"
+set grid ytics lt 1 lw 1 lc rgb "#bbbbbb"
+set grid xtics lt 1 lw 1 lc rgb "#bbbbbb"
 
 set boxwidth 0.9
 set style fill solid
 plot ARG3 using 1:7 with boxes lc rgb"navy", "" u 1:7:7 with labels offset char 0,1 font 'Verdana,6'
 reset
 #Variance - Histogram/////////////////////////////////////////////////////////
+
+
+#6
+#FracVar Plots//////////////////////////////////////////////////////////////////////
+reset
+set term pngcairo size 1920, 1080 enhanced font 'Verdana,20'
+out = sprintf("%s%s", ARG1, "_fracvarplots2.png")
+set output out
+set datafile separator ":"
+
+set boxwidth 0.7
+set style fill solid
+
+set title "Fractional Variance Plot"
+
+
+set xrange [0:25]
+set xtics 1
+
+set grid ytics lt 1 lw 1 lc rgb "#bbbbbb" front
+set grid xtics lt 1 lw 1 lc rgb "#bbbbbb" front
+
+set xlabel "Minority Seats Won"
+set ylabel "Fractional Variance"
+
+
+
+plot ARG2 using 1:($2+$3) with boxes lc rgb "blue" notitle,\
+	 "" u 1:($2+$3):($3>0.000?sprintf("%.3f",$3):"") with labels offset char 0, 1 font 'Verdana,15' textcolor rgb"black" notitle,\
+	 ARG2 using 1:2 with boxes lc rgb "white" notitle,\
+	 "" u 1:2:($2>0.000?sprintf("%.3f",$2): "") with labels offset char 0, -1 font 'Verdana,15' textcolor rgb"black" notitle
+     
+reset
+#FracVar Plots//////////////////////////////////////////////////////////////////////
+
+
+#7
+#Var Plots//////////////////////////////////////////////////////////////////////
+reset
+set term pngcairo size 1920, 1080 enhanced font 'Verdana,20'
+out = sprintf("%s%s", ARG1, "_varplots2.png")
+set output out
+set datafile separator ":"
+
+set boxwidth 0.7
+set style fill solid
+
+set title "Variance Plot"
+
+
+set xrange [0:25]
+set xtics 1
+
+set grid ytics lt 1 lw 1 lc rgb "#bbbbbb" front
+set grid xtics lt 1 lw 1 lc rgb "#bbbbbb" front
+
+set xlabel "Minority Seats Won"
+set ylabel "Variance"
+
+
+
+plot ARG3 using 1:($2+$3) with boxes lc rgb "red" notitle,\
+	 "" u 1:($2+$3):($3>0.000?sprintf("%.2f",$3): "") with labels offset char 0, 1 font 'Verdana,15' textcolor rgb"black" notitle,\
+	 ARG3 using 1:2 with boxes lc rgb "white" notitle,\
+	 "" u 1:2:($2>0.000?sprintf("%.2f",$2): "") with labels offset char 0, -1 font 'Verdana,15' textcolor rgb"black" notitle
+     
+reset
+#Var Plots//////////////////////////////////////////////////////////////////////

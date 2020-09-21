@@ -51,7 +51,7 @@ set title t
 set xrange [-1:26]
 set xtics 1
 set xlabel "Constituency"
-set ylabel "Lost/Won"
+set ylabel "Minority/Majority Fraction"
 
 set key horiz
 set key tmargin

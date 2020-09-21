@@ -11,7 +11,7 @@ Layout of the code:
 6. Conduct Elections * No. of Measurenments
 7. Generate configuration files
 8. Plot data via launching gnuplot scripts
-9. Repeat for iteration(2->8) if iterations > 1
+9. Repeat for iteration(2 &#8594; 8) if iterations > 1
 10. End
 
 Important Points:

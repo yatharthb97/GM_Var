@@ -5,13 +5,13 @@ Layout of the code:
 0. Start
 1. Create Filesystem and assign paths
 2. According to the set parameters - decide on the total minority population
-3. Create different constituencies with the given con_max sistribution
+3. Create different constituencies with the given con_max distribution
 4. Assign Minority population to different constituencies. - Initial Settlement
 5. Mix the minority poulations - Migration
 6. Conduct Elections * No. of Measurenments
 7. Generate configuration files
 8. Plot data via launching gnuplot scripts
-9. Repeat for iteration if iterations > 1
+9. Repeat for iteration(2->8) if iterations > 1
 10. End
 
 Important Points:

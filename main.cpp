@@ -48,18 +48,24 @@ string parent_path_gl = "/mnt/m/Gerry_Study/Results/";
 int iterations = 1;
 int total_measurements = 10000;
 float frac_minority = 0.5;
-double swap_parameter = 1.0; //0.0-0.5
 int total_pop = 1000;
 
 int tot_min = total_pop*frac_minority;
 int tot_maj = total_pop - tot_min;
 
 bool printinfo = false;
-bool twice_swap = false;
 
 int con_lowest = 23; //Constituency with the lowest strength - ***Automate
-int con_matrix[25] = {23, 24, 27, 25, 26, 28, 22, 26, 23, 26, 25, 24, 28, 24, 53, 52, 46, 54, 44, 52, 45, 75, 78, 73, 77};
 int con_matrix_size = 25;
+
+int con_matrix[25] = {0};
+ArrayCopy(con_matrix, All_Equal, 25);
+bool ShuffleConMatrix = false;
+
+//---> Sampling Mode
+bool twice_swap = false;
+double swap_parameter = 1.0; //0.0-0.5
+//---> Sampling Mode
 
 ////////////////////////////////Global Paramaters/////////////////////
 
@@ -103,32 +109,41 @@ if(MakeDir(newpath))
 
 
 
-
 ////////////////////////////////Print Information/////////////////////
 
-	std::cout << "-------------------------------------------------------" << "\n"
-			  << "-------------------------------------------------------" << "\n"
-			  << "Gerrymandering Study" << "\n" << "Run Name: " << run_name << "\n"
-			  << "-------------------------------------------------------" << "\n"
-			  << "Minority Fraction: " << frac_minority << "\n"
-			  << "Total Population: " << total_pop << "\n"
-			  << "Minority Population: " << tot_min << "\n"
-			  << "Majority population: " << tot_maj << "\n"
-			  << "Total Measurements: " << total_measurements << "\n"
-			  << "Parent Path: " << parent_path << "\n"
-			  #ifdef __DENSITY_PLOT__
-			  	<< "Density Color Plot is set!" << "\n"
-			  #endif
-			  << "-------------------------------------------------------" << std::endl;
+	std::cout 
+	<< "-------------------------------------------------------" << "\n"
+	<< "-------------------------------------------------------" << "\n"
+	<< "Gerrymandering Study" << "\n" << "Run Name: " << run_name << "\n"
+	<< "-------------------------------------------------------" << "\n"
+	<< "Minority Fraction: " << frac_minority << "\n"
+	<< "Total Population: " << total_pop << "\n"
+	<< "Minority Population: " << tot_min << "\n"
+	<< "Majority population: " << tot_maj << "\n"
+	<< "Total Measurements: " << total_measurements << "\n"
+	<< "Parent Path: " << parent_path << "\n"
+	#ifdef __DENSITY_PLOT__
+		<< "Density Color Plot is set!" << "\n"
+	#endif
+	<< "-------------------------------------------------------" << std::endl;
 
 ////////////////////////////////Print Information/////////////////////
 
 
 ////////////////////////////////Run Scope Resources/////////////////////
 
+	
+	/////////Declaration of Random Generator and Distributions
 	Rndm rand(swap_parameter); //Initialize Random number generators
 	rand.get1_set(0, con_matrix_size-1); //Set range for get1 - Constituency list
 	//rand.get2_set(0.1,swap_parameter); //Set range for get2 - swap_parameter
+
+	/////////Declaration of Random Generator and Distributions
+
+	if(ShuffleConMatrix)
+		std::shuffle(con_matrix, con_matrix+25, rand);
+
+	std::cout << PrintMatrix("Constituency Distribution") << std::endl;
 
 
 	std::ostringstream buffer1;
@@ -347,8 +362,10 @@ if(MakeDir(newpath))
 
 		//Update buffer for variance v fracvariance plot
 
-		buffer2 << setprecision(10) << variance << ":" << fracvariance <<"\n";
-		
+		#ifdef __VARVFRACVAR__
+		buffer2 << setprecision(10) << variance << __DSep__ << fracvariance <<"\n";
+		#endif
+
 		#ifdef __DENSITY_PLOT__
 			_varince[mm] = variance;
 			frac_varince[mm] = fracvariance;
@@ -392,16 +409,18 @@ if(MakeDir(newpath))
 	var.Print(path2);
 
 	//Var v FracVar Plot - buffer2
+	#ifdef __VARVFRACVAR__
 	std::string path3 = parent_path + run_name + "_varvfracvar.txt";
 	ofstream file1(path3, ios::out);
 	file1 << buffer2.str(); 
 	file1.close();
+	#endif
 
 	//Swap Matrix & Seat Specific Distributions
 	for(unsigned int i=0; i <con_matrix_size; i++)
 	{
 		buffer1 << std::setw(2) << std::setfill('0')
-				<< i << ":" << swap_matrix[i] << ":" << con_matrix[i] << "\n";
+				<< i << __DSep__ << swap_matrix[i] << __DSep__ << con_matrix[i] << "\n";
 		
 		double won = double(won_matrix[i])/total_measurements*100;
 		double lost = double(lost_matrix[i])/total_measurements*100;
@@ -409,7 +428,7 @@ if(MakeDir(newpath))
 		double maj = double(maj_pop_matrix[i])/double(con_matrix[i])/total_measurements*100;
 
 		buffer3 << setprecision(4) << std::setw(2) << std::setfill('0')
-		<< i << ":" << con_matrix[i] << ":" << won << ":" << lost << ":" << min << ":" << maj <<"\n";
+		<< i << __DSep__ << con_matrix[i] << __DSep__ << won << __DSep__ << lost << __DSep__ << min << __DSep__ << maj <<"\n";
 	}
 	
 	std::string path4 = parent_path + run_name + "_swaps.txt";
@@ -450,12 +469,15 @@ if(MakeDir(newpath))
 		  << " " << path1<< " " << path2;
 	MakeSysCall(plot1.str(), "gnuplot - Var Plots & Histogram");
 
+
 	//Plot Command 2(Var v FracVar Scatter Plot)
+	#ifdef __VARVFRACVAR__
 	std::ostringstream plot2;
 	plot2 << "./varvfracvar.gnu " 
 		  << parent_path << run_name
 		  << " " << path3;
 	MakeSysCall(plot2.str(), "gnuplot - Var v FracVar Scatter Plot");
+	#endif
 
 	//Plot Command 3(Swap Plot)
 	std::ostringstream plot3;

@@ -27,6 +27,11 @@
 #include <string>
 #include <chrono>
 #include <iomanip>
+#include <algorithm>
+
+//Macros included here
+#include "macros.h"
+//Macros included here
 
 #include "timer.h"
 #include "densityplot.h"
@@ -34,7 +39,7 @@
 #include "constituency.h"
 #include "random.h"
 #include "main.h"
-#include "macros.h"
+
 using namespace std;
 using namespace std::chrono;
 //#define __DENSITY_PLOT__

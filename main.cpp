@@ -50,22 +50,26 @@ int Constituency::counter = 0; //Counter initialization
 ////////////////////////////////Global Paramaters/////////////////////
 string parent_path_gl = "/mnt/m/Gerry_Study/Results/";
 
+
 int iterations = 1;
 int total_measurements = 10000;
 float frac_minority = 0.5;
 int total_pop = 1000;
 
+int con_matrix_size = 25;
 int tot_min = total_pop*frac_minority;
 int tot_maj = total_pop - tot_min;
 
 bool printinfo = false;
 
-int con_lowest = 23; //Constituency with the lowest strength - ***Automate
-int con_matrix_size = 25;
-
 int con_matrix[25] = {0};
-ArrayCopy(con_matrix, All_Equal, 25);
+ArrayCopy(con_matrix, All_Equal, con_matrix_size);
 bool ShuffleConMatrix = false;
+
+//Defination of con_lowest -> minimum size of any constituency
+int it;
+it = std::min_element(con_matrix, con_matrix + con_matrix_size);
+int con_lowest = *it;
 
 //---> Sampling Mode
 bool twice_swap = false;
@@ -145,9 +149,16 @@ if(MakeDir(newpath))
 
 	/////////Declaration of Random Generator and Distributions
 
-	if(ShuffleConMatrix)
-		std::shuffle(con_matrix, con_matrix+25, rand);
+	/////////Shuffling of Con_Matrix////////////////////////////////
+	bool shuff = true;
+	#ifdef __L_F_IT__
+		if(i >= __L_F_IT__)
+			shuff = false;
+	#endif 
 
+	if(ShuffleConMatrix && shuff)
+		std::shuffle(con_matrix, con_matrix+25, rand);
+	/////////Shuffling of Con_Matrix////////////////////////////////
 	std::cout << PrintMatrix("Constituency Distribution") << std::endl;
 
 
@@ -171,10 +182,10 @@ if(MakeDir(newpath))
 	int minority_mean = uniform_minority; //Duplicate
 	if(con_lowest < uniform_minority)
 	{
-		cerr << "Error - Uniform Majority is higher than lowest Constituency Size - Constituency Overflow Expected!" << endl;
+		cerr << FORERED << "Error - Uniform Majority is higher than lowest Constituency Size - Constituency Overflow Expected!" << RESETTEXT << endl;
 	}
 	#ifdef __DENSITY_PLOT__
-		cout << "**********" << endl;
+		cout << "****Heap Matrix Allocation****" << endl;
 		double* _varince = new double[total_measurements]();
 		double* frac_varince = new double[total_measurements]();
 	#endif
@@ -368,7 +379,7 @@ if(MakeDir(newpath))
 		//Update buffer for variance v fracvariance plot
 
 		#ifdef __VARVFRACVAR__
-		buffer2 << setprecision(10) << variance << __DSep__ << fracvariance <<"\n";
+		buffer2 << setprecision(__Out_Prec__) << variance << __DSep__ << fracvariance <<"\n";
 		#endif
 
 		#ifdef __DENSITY_PLOT__

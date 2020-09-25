@@ -2,15 +2,16 @@
  m"   " ##  ##        "m  m"   ##   #   "#  |	Discipline of Physics
  #   mm # ## #         #  #   #  #  #mmmm"  |	IIT Indore
  #    # # "" #         "mm"   #mm#  #   "m  |	(yatharth1997@gmail.com)
-  "mmm" #    #__________##   #    # #    "  |	(git: yatharthb97)
+  "mmm" #    #__________##   #    # #    #  |	(git: yatharthb97)
   											|	Licence: *******************
-//---------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
 //Gerrymandering Variance Analysis - GM_VAR v1.0
   Header File defining the variance table
-//-----------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 //		+++ Notes - InComplete, +++ Status - Not Tested
-//-----------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+
 */
 /*Notes
 
@@ -56,6 +57,7 @@ public:
 		count.reserve(tab_size);
 		zero_freq.reserve(tab_size);
 
+		//Zero Initialisations
 		for(unsigned int i = 0; i < tab_size; i++)
 		{
 			min.push_back(0);
@@ -66,7 +68,7 @@ public:
 			zero_freq.push_back(0);
 		}
 	}//End of Constructor
-	//**********************************************************************************
+	//**************************************************************************
 
 	//!Function that updates the varance table
  	/*
@@ -77,7 +79,7 @@ public:
 	{
 		
 		//Minimum Comparision
-		if(variance < 0.00000001 && variance > -0.00000001) //### Machine Epsilon  - 10e-8
+		if(variance < __M_EPSILON__ && variance > -1*__M_EPSILON__)
 		{
 			zero_freq.at(seats)++;
 		}
@@ -92,7 +94,7 @@ public:
 		stack.at(seats)+= variance;
 		count.at(seats)++;
 	}//End of Push()
-//**********************************************************************************
+//******************************************************************************
 	//!Function that prints the variance table
  	/*
  	\param string filename of the file for printing the variance table
@@ -100,13 +102,14 @@ public:
 	void Print(string filename)
 	{
 		ostringstream buffer;
-		for(unsigned int i = 0; i <=25; i++)
+		for(unsigned int i = 0; i <= 25; i++)
 		{
 					
-			buffer << setprecision(10)
-			<< i << ":" << min.at(i) << ":" << max.at(i) << ":" << (max.at(i) - min.at(i)) 
-			<< ":" << (count.at(i)!=0 ? (stack.at(i)/count.at(i)) : 0) << ":" << count.at(i)
-			<< ":" << zero_freq.at(i)
+			buffer << setprecision(__Out_Prec__)
+			<< i << __DSep__ << min.at(i) << __DSep__ << max.at(i) << __DSep__ << (max.at(i) - min.at(i)) 
+			<< __DSep__ << (count.at(i)!=0 ? (stack.at(i)/count.at(i)) : 0) 
+			<< __DSep__ << count.at(i)
+			<< __DSep__ << zero_freq.at(i)
  			<< "\n";
 		}
 
@@ -114,7 +117,7 @@ public:
 		file << buffer.str();
 		file.close();
 	}//End of Print()
-//**********************************************************************************
+//******************************************************************************
 
 
 
@@ -123,7 +126,7 @@ public:
 
 
 }; //End of class VarTable
-//**********************************************************************************
+//******************************************************************************
 
 
 ////////////////////////////////END OF TRANSLATION UNIT/////////////////////////

@@ -25,6 +25,13 @@
 #include <sys/stat.h>
 
 
+//----------------------------------
+#include "constituency_distro.h"
+
+
+//----------------------------------
+
+
 //1
 //External Function - Make Directory
 //!Function that creates directory

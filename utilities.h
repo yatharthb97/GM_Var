@@ -38,3 +38,10 @@ bool SetFile(const std::string &path, const std::string &content)
 	else
 		return false;
 }
+
+
+
+void ArrayCopy(int[] to, int[] from, size_t size)
+{
+	memcopy(to, from, size);
+}

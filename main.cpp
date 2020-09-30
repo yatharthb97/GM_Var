@@ -4,7 +4,7 @@
 | $$  \__/| $$$$  /$$$$| $$   | $$ /$$$$$$   /$$$$$$  |IIT Indore
 | $$ /$$$$| $$ $$/$$ $$|  $$ / $$/|____  $$ /$$__  $$ |(yatharth1997@gmail.com)
 | $$|_  $$| $$  $$$| $$ \  $$ $$/  /$$$$$$$| $$  \__/ |(git: yatharthb97)
-| $$  \ $$| $$\  $ | $$  \  $$$/  /$$__  $$| $$       |Licence: *******************
+| $$  \ $$| $$\  $ | $$  \  $$$/  /$$__  $$| $$       |Licence: **************
 |  $$$$$$/| $$ \/  | $$   \  $/  |  $$$$$$$| $$		  |
  \______/ |__/     |__/====\_/    \_______/|_*/  	//|
 //---------------------------------------------------------------------------------
@@ -28,6 +28,10 @@
 #include <chrono>
 #include <iomanip>
 #include <algorithm>
+#include <array>
+#include <stdlib.h>
+#include <cstring>
+
 
 //Macros included here
 #include "macros.h"
@@ -45,7 +49,7 @@ using namespace std::chrono;
 //#define __DENSITY_PLOT__
 
 //global declarations
-int Constituency::counter = 0; //Counter initialization
+//int Constituency::counter = 0; //Counter initialization
 
 ////////////////////////////////Global Paramaters/////////////////////
 string parent_path_gl = "/mnt/m/Gerry_Study/Results/";
@@ -55,26 +59,32 @@ int iterations = 1;
 int total_measurements = 10000;
 float frac_minority = 0.5;
 int total_pop = 1000;
+bool ShuffleConMatrix = false;
 
-int con_matrix_size = 25;
+//---> Sampling Mode
+bool twice_swap = false;
+double swap_param_l = 0.5; //0.0-0.5
+double swap_param_u = 1.0; //0.0-0.5
+//---> Sampling Mode
+
+//---> Con_Matrix Declarations
+const int con_matrix_size = 25;
+int con_matrix[25] = {0};
+//constexpr auto tmp = std::copy(All_Equal, All_Equal + con_matrix_size, con_matrix);
+//bool t = ArrayCopy(con_matrix, All_Equal, con_matrix_size);
+//---> Con_Matrix Declarations
+
 int tot_min = total_pop*frac_minority;
 int tot_maj = total_pop - tot_min;
 
 bool printinfo = false;
 
-int con_matrix[25] = {0};
-ArrayCopy(con_matrix, All_Equal, con_matrix_size);
-bool ShuffleConMatrix = false;
 
 //Defination of con_lowest -> minimum size of any constituency
-int it;
-it = std::min_element(con_matrix, con_matrix + con_matrix_size);
-int con_lowest = *it;
+//auto it;
 
-//---> Sampling Mode
-bool twice_swap = false;
-double swap_parameter = 1.0; //0.0-0.5
-//---> Sampling Mode
+
+
 
 ////////////////////////////////Global Paramaters/////////////////////
 
@@ -84,14 +94,45 @@ int main(int argc, char const *argv[])
 	std::string run_name_gl;
 	if (argc == 0)
 	{
-		std::cerr << "Error: No output filename given!" << std::endl;
-		return 0;
+		std::cerr << FORERED << "Error: No output filename given!" << RESETTEXT << std::endl;
+		exit(EXIT_FAILURE);
 	}
 
 	else
 	{
 		run_name_gl = argv[1];
 	}
+
+	std::copy(All_Equal, All_Equal + con_matrix_size, con_matrix);
+	int con_lowest;
+	con_lowest = *std::min_element(con_matrix, con_matrix + con_matrix_size);
+	//auto it = std::min_element(con_matrix, con_matrix + con_matrix_size);
+	//const int con_lowest = *it;
+
+	/////Error Mode Check//////////////////////////////////
+
+
+	int con_sum_check = std::accumulate(con_matrix, con_matrix + con_matrix_size, 0);
+	if(con_sum_check != total_pop)
+	{
+		std::cerr << FORERED << "Total Population(" << total_pop << ")- Constituency Matrix Sum(" << con_sum_check << ")mismatch" << RESETTEXT << std::endl;
+		exit(EXIT_FAILURE);
+	}
+
+#ifdef __VARVFRACVAR__
+	if(total_measurements > 100000000) //10^8
+		std::cerr << FORERED << "Total Measurements > 10^8 is not compatible with Var v Frac Var measurement." << RESETTEXT << std::endl;
+	exit(EXIT_FAILURE);
+#endif
+
+
+#ifdef __DENSITY_PLOT__
+	if(total_measurements > 100000) //10^5
+		std::cerr << FORERED << "Total Measurements > 10^5 is not compatible with Color Density Plot Generation." << RESETTEXT << std::endl;
+	exit(EXIT_FAILURE);
+#endif
+	/////Error Mode Check//////////////////////////////////
+
 
 //Controls the number of iterative consecutive runs
 //*************Scaling Loop*****************************
@@ -143,7 +184,7 @@ if(MakeDir(newpath))
 
 	
 	/////////Declaration of Random Generator and Distributions
-	Rndm rand(swap_parameter); //Initialize Random number generators
+	Rndm rand(swap_param_l, swap_param_u); //Initialize Random number generators
 	rand.get1_set(0, con_matrix_size-1); //Set range for get1 - Constituency list
 	//rand.get2_set(0.1,swap_parameter); //Set range for get2 - swap_parameter
 
@@ -157,9 +198,10 @@ if(MakeDir(newpath))
 	#endif 
 
 	if(ShuffleConMatrix && shuff)
-		std::shuffle(con_matrix, con_matrix+25, rand);
+		std::shuffle(con_matrix, con_matrix+25, rand.engine);
 	/////////Shuffling of Con_Matrix////////////////////////////////
-	std::cout << PrintMatrix("Constituency Distribution") << std::endl;
+	std::cout << PrintMatrix(con_matrix, con_matrix_size) << std::endl;
+	std::cout << "Lowest Contituency Size: " << con_lowest << std::endl;
 
 
 	std::ostringstream buffer1;
@@ -169,6 +211,7 @@ if(MakeDir(newpath))
 	//std::vector<pair<int, double>> seat_var_list;
 	VarTable var(con_matrix_size+1); //VarTable for minority variance 
 	VarTable fracvar(con_matrix_size+1); //VarTable for fraction of minority variance
+	VarTable eff_gap(con_matrix_size+1); //VarTable for Efficiency Gap
 	long int swap_matrix[con_matrix_size] = {0}; //For Storing Swaps
 
 	int won_matrix[con_matrix_size] = {0};
@@ -178,16 +221,27 @@ if(MakeDir(newpath))
 	int maj_pop_matrix[con_matrix_size] = {0};
 
 	int zero_min_con = 0; //Number of Constituencies with zero minority pop
-	int uniform_minority = tot_min / con_matrix_size;
-	int minority_mean = uniform_minority; //Duplicate
+
+	///Filling of Uniform Minority --> Settlement before mixing
+	#if __MIX_STATE__ == 0
+		int uniform_minority = tot_min / con_matrix_size;
+		int minority_mean = uniform_minority; //Duplicate
+
+	#elif __MIX_STATE__ == 1
+		int uniform_minority = 0;
+		int minority_mean = uniform_minority;
+	#endif
+	///Filling of Uniform Minority --> Settlement before mixing
+
+
 	if(con_lowest < uniform_minority)
 	{
-		cerr << FORERED << "Error - Uniform Majority is higher than lowest Constituency Size - Constituency Overflow Expected!" << RESETTEXT << endl;
+		std::cerr << FORERED << "Error - Uniform Majority is higher than lowest Constituency Size - Constituency Overflow Expected!" << RESETTEXT << endl;
 	}
 	#ifdef __DENSITY_PLOT__
 		cout << "****Heap Matrix Allocation****" << endl;
 		double* _varince = new double[total_measurements]();
-		double* frac_varince = new double[total_measurements]();
+		double* _frac_varince = new double[total_measurements]();
 	#endif
 
 ////////////////////////////////Run Scope Resources/////////////////////
@@ -205,33 +259,36 @@ if(MakeDir(newpath))
 		
 //___________________________________________MEASUREMENT_____________
 		
-//Loop Scope Resources////////////////////////////////////////////////
-		Constituency::counter = 0; //Counter initialization
-		std::vector<Constituency> con_list;
-		con_list.reserve(con_matrix_size);
+//Measurement Loop Scope Resources////////////////////////////////////////////////
+		//Constituency::counter = 0; //Counter initialization
+		std::array <Constituency, con_matrix_size> con_list;
+		//con_list.reserve(con_matrix_size);
 
 		int min_win = 0; //Number of seats won by minority
 		double mean = 0; //Mean of fraction pop - calculated during election
-		double fracvariance = 0; //Fractional Variance
-		double variance = 0; //Variance
+		double fracvariance = 0.0; //Fractional Variance
+		double variance = 0.0; //Variance
 		int total_swaps = 0; //Number of attempted swaps
-//Loop Scope Resources////////////////////////////////////////////////
+		int wasted_minority = 0; //Wasted Minority Votes
+		int wasted_majority = 0; //Wasted Majority Votes
+		double Efficiency_Gap = 0.0; //Effeciency Gap per Election
+//Measurement Loop Scope Resources////////////////////////////////////////////////
 
-		
-		//std::cout << "1" << std::endl;
 
 
 //Populating Constituencies - First Settlement/////////////////////////
+		
 		for (unsigned int i = 0; i < con_matrix_size - 1; i++)
 		{
 			//Equal assignment of all minorities
-			con_list.emplace_back(con_matrix[i], uniform_minority); 
+			//con_list.emplace_back(con_matrix[i], uniform_minority);
+			con_list.at(i).assign(con_matrix[i], uniform_minority); 
 
 		}
 
 		//Fill leftover - Prevent error in case tot_minority is not divisible by con_matrix_size
 		int leftover = tot_min - ((con_matrix_size-1)*uniform_minority);
-		con_list.emplace_back(con_matrix[con_matrix_size -1], leftover);
+		con_list.end()->assign(con_matrix[con_matrix_size -1], leftover);
 //Populating Constituencies - First Settlement/////////////////////////
 
 		//std::cout << "2" << std::endl;
@@ -239,11 +296,15 @@ if(MakeDir(newpath))
 		// ??? Check the algoritm once
 ////////Migration////////////////////////////////////////////////////
 		//Swap only possible when a double swap is possible. - Double Swap Method
-		
+	#if __MIX_STATE__ == 0
 		//Scope - Migration
+		#ifdef DDEBUG
+			std::cerr << FORERED << "Debug - Swap method implemented." << RESETTEXT << std::endl;
+		#endif
+
 		int x = 0;
-		double y =0, z=0;
-		int mix1=0, mix2=0, temp =0;
+		double y = 0, z = 0;
+		int mix1 = 0, mix2 = 0, temp = 0;
 		//Scope - Migration
 		
 		for (unsigned int i = 0; i < con_matrix_size; i++)
@@ -299,13 +360,39 @@ if(MakeDir(newpath))
 				} //Single Swap
 			
 		} //End of Migration Loop
+
+	#elif __MIX_STATE__ == 1
+		#ifdef DDEBUG
+			std::cerr << FORERED << "Debug - Fill method implemented." << RESETTEXT << std::endl;
+		#endif
+		int shufflist[con_matrix_size];
+		std::iota(shufflist, shufflist + con_matrix_size, 0);
+		std::shuffle(shufflist, shufflist + con_matrix_size, rand.engine);
+		
+		int min_reserve = tot_minority;
+		for(int ii = 0; i < con_matrix_size; i++)
+		{
+			int conid = shufflist[ii];
+			std::uniform_int_distribution<int> dist(__MIN_CON_FILL__, con_matrix[conid]);
+			int temp = dist(rand.engine);
+
+			if(temp <= min_reserve)
+			{
+				con_list.at(conid).min_pop = temp;
+				min_reserve -= temp;
+			}
+
+			if(min_reserve <= 0)
+				break;
+		}
+	#endif
 ////////Migration - End////////////////////////////////////////////////////
 
 
 		//std::cout << "3" << std::endl;
 
 
-////////Election////////////////////////////////////////////////////
+////////Elections////////////////////////////////////////////////////
 		double stack = 0; //For storing the mean of frac population
 		int mpop = 0;
 		for (unsigned int i = 0; i < con_matrix_size; i++)
@@ -327,13 +414,16 @@ if(MakeDir(newpath))
 					won_matrix[i]++;
 					//con_list.at(i).min_win = true; 
 					//Update the Constituency specific flag
-
+					wasted_majority += majo;
 					min_win++; //Update the number of seats won by the minority
 					//std::cout << mm << "  " << i << " Minority win!" <<std::endl;
 				}
 
 				else
+				{
 					lost_matrix[i]++;
+					wasted_minority += mpop;
+				}
 			}
 			
 			//Test/////////////
@@ -345,16 +435,19 @@ if(MakeDir(newpath))
 			//total_swaps += con_list.at(i).swaps; //***
 			stack += (double(mpop)/double(con_matrix[i])); //Add Fraction of min pop per constituency to the stack
 
+
 		}
 		//std::cout << std::endl;
 
-		mean = stack/con_matrix_size; //Normalising the value of mean
-////////Election - End////////////////////////////////////////////////////
+		mean = stack / con_matrix_size; //Normalising the value of mean
+		
+		Efficiency_Gap = double(wasted_minority - wasted_majority) / double (total_pop) ;
+////////Elections - End////////////////////////////////////////////////////
 		 
 
 ////////Analysis////////////////////////////////////////////////////
 		double term1, term2 = 0; //term1 - fractional variance & term2 - absolute varaiance
-		double var_stack=0; //term2 squared
+		double var_stack = 0; //term2 squared
 		double fracvar_stack = 0; //term1 squared
 
 		for (unsigned int i = 0; i < con_matrix_size; i++)
@@ -368,6 +461,7 @@ if(MakeDir(newpath))
 
 			swap_matrix[i] += con_list.at(i).swaps;
 		}
+
 		//Calculate Variance
 		variance = var_stack / (con_matrix_size-1); //Normalisation of variance
 		fracvariance = fracvar_stack / (con_matrix_size-1); //Normalisation of absolute variance
@@ -375,6 +469,7 @@ if(MakeDir(newpath))
 		
 		var.Push(min_win, variance); //Update Table
 		fracvar.Push(min_win, fracvariance); //Update Table
+		eff_gap.Push(min_win, Efficiency_Gap); //Update Table
 
 		//Update buffer for variance v fracvariance plot
 
@@ -384,7 +479,7 @@ if(MakeDir(newpath))
 
 		#ifdef __DENSITY_PLOT__
 			_varince[mm] = variance;
-			frac_varince[mm] = fracvariance;
+			_frac_varince[mm] = fracvariance;
 		#endif
 
 		if(printinfo)
@@ -457,19 +552,23 @@ if(MakeDir(newpath))
 	file3 << buffer3.str(); 
 	file3.close();
 
+	//Efficiency Gap Table
+	std::string path6 = parent_path + run_name + "_effgap.txt";
+	eff_gap.Print(path6);
+
 	#ifdef __DENSITY_PLOT__
 		//Color density plot
 		int Bins = 10;
 		double Delta = 100; //Divide 1 Bin into Delta parts for sorting.
 		{
 			Timer colordensity("Color Density Plot");
-			DensityColorPlot(_varince, frac_varince,
+			DensityColorPlot(_varince, _frac_varince,
 						  total_measurements, Bins, Delta, parent_path, run_name);
 		}
 
 		//Freeing Memory
 		delete[] _varince;
-		delete[] frac_varince;
+		delete[] _frac_varince;
 	#endif
 /////////Generate Files/////////////////////////////////
 
@@ -484,7 +583,9 @@ if(MakeDir(newpath))
 		  << parent_path << run_name
 		  << " " << path1<< " " << path2;
 	MakeSysCall(plot1.str(), "gnuplot - Var Plots & Histogram");
-
+	//ARG2 -> path1 -> Frac Var Plots
+	//ARG3 -> path2 -> Var Plots
+	//ARG4 -> path6 -> Efficiency Plots
 
 	//Plot Command 2(Var v FracVar Scatter Plot)
 	#ifdef __VARVFRACVAR__

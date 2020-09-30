@@ -1,9 +1,12 @@
-/* mmm  m    m        m    m   mm   mmmmm	|	Developed by: Yatharth Bhasin
- m"   " ##  ##        "m  m"   ##   #   "#  |	Discipline of Physics
- #   mm # ## #         #  #   #  #  #mmmm"  |	IIT Indore
- #    # # "" #         "mm"   #mm#  #   "m  |	(yatharth1997@gmail.com)
-  "mmm" #    #__________##   #    # #    "  |	(git: yatharthb97)
-  											|	Licence: *******************
+
+  /*$$$$$  /$$      /$$ /$$    /$$                    |Developed by: Yatharth Bhasin
+ /$$__  $$| $$$    /$$$| $$   | $$                    |Discipline of Physics
+| $$  \__/| $$$$  /$$$$| $$   | $$ /$$$$$$   /$$$$$$  |IIT Indore
+| $$ /$$$$| $$ $$/$$ $$|  $$ / $$/|____  $$ /$$__  $$ |(yatharth1997@gmail.com)
+| $$|_  $$| $$  $$$| $$ \  $$ $$/  /$$$$$$$| $$  \__/ |(git: yatharthb97)
+| $$  \ $$| $$\  $ | $$  \  $$$/  /$$__  $$| $$       |Licence: **************
+|  $$$$$$/| $$ \/  | $$   \  $/  |  $$$$$$$| $$		  |
+ \______/ |__/     |__/====\_/    \_______/|_*/  	//|
 //---------------------------------------------------------------------------------
 
 //Gerrymandering Variance Analysis - GM_VAR v1.0
@@ -11,7 +14,6 @@
 //-----------------------------------------------------------------------------------
 //		+++ Notes - Complete, +++ Status - Tested 
 //-----------------------------------------------------------------------------------
-*/
 
 /*Notes
 
@@ -20,31 +22,35 @@
 //Preprocessor Commands
 #pragma once
 #include <random>
+#include <iostream>
 
 /** Class that defines the random generation module.
  *  
  */
 class Rndm
 {
-	
-	std::ranlux48 rlx1; /*!< Ranlux48 generator 1 */
-	std::ranlux48 rlx2; /*!< Ranlux48 generator 2 */
+
+public:
+
+	std::ranlux48 engine; /*!< Ranlux48 generator 1 */
+	//std::ranlux48 rlx2; /*!< Ranlux48 generator 2 */
 	std::uniform_real_distribution<double> getsII; /*!< Uniform distribution - double */
 	std::uniform_int_distribution<int> getsI; /*!< Uniform distribution - integer */
 
-public:
+
 
 	//1
 	//Constructor
 	//!Class Constructor. Class constructor that seeds the random number generators using system entropy and sets range of distributions.
-	Rndm(double swap_parameter)
+	Rndm(double swap_param_l, double swap_param_u)
 	{
 		//Seed generators from system entropy
-		std::random_device r1; 
-		std::random_device r2;
-		rlx1.seed(r1());
-		rlx2.seed(r2());
-		getsII.param(std::uniform_real_distribution<double>::param_type(0.5, swap_parameter));
+		std::random_device r1;
+		engine.seed(r1());
+		//std::cout << "Seed:" << engine.seed() << "\n\n\n";
+
+		getsII.param(std::uniform_real_distribution<double>::param_type(swap_param_l, swap_param_u));
+		std::cout << "Real Distribution Set: [" << getsII.a() << ',' << getsII.b() << "]\n";
 		
 	}//End of constructor
 //**********************************************************************************
@@ -58,6 +64,7 @@ public:
 	void get1_set(double lower, double upper)
 	{
 			getsI.param(std::uniform_int_distribution<int>::param_type(lower, upper));
+			std::cout << "Int Distribution Set: [" << getsI.a() << ',' << getsI.b() << "]\n";
 	}//End of get1_set()
 //**********************************************************************************
 
@@ -71,6 +78,7 @@ public:
 	void get2_set(int lower, int upper)
 	{
 			getsII.param(std::uniform_real_distribution<double>::param_type(lower, upper));
+			std::cout << "Real Distribution Set: [" << getsII.a() << ',' << getsII.b() << "]\n";
 	}//End of get1_set()
 //**********************************************************************************
 
@@ -81,7 +89,7 @@ public:
 	*/
 	int get1()
 	{
-		return getsI(rlx1);
+		return getsI(engine);
 	}//End of get1()
 //**********************************************************************************
 
@@ -92,7 +100,7 @@ public:
 	*/
 	double get2()
 	{
-		return getsII(rlx2);
+		return getsII(engine);
 	} //End of get2()
 
 //**********************************************************************************

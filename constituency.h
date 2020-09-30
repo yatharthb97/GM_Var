@@ -22,6 +22,7 @@
 #include <sstream>
 #include <iostream>
 #include <iomanip>
+#include <array>
 
 /** Class that defines a constituency.
  *  
@@ -31,8 +32,8 @@ class Constituency
 
 public:
 
-	static int counter; /*!< Static memeber that keeps count of the constituencies. */
-	int ID; /*!< ID token for the constitunency. */
+	//static int counter; /*!< Static memeber that keeps count of the constituencies. */
+	//int ID; /*!< ID token for the constitunency. */
 	int con_max; /*!< Maximum population size */
 	int min_pop; /*!< Minority Population */
 	int swaps; /*!< Number of population exchanges successful. */
@@ -46,7 +47,10 @@ public:
  	\param con_max constituency maximum size
  	\param min_pop minority population assigned
  	*/
-	Constituency(int con_max, int min_pop): ID(++counter), con_max(con_max), min_pop(min_pop), swaps(0), min_win(false)
+	Constituency(int con_max, int min_pop): con_max(con_max), min_pop(min_pop), swaps(0), min_win(false)
+	{} //End of Constructor
+
+	Constituency(): con_max(0), min_pop(0), swaps(0), min_win(false)
 	{} //End of Constructor
 //**********************************************************************************
 
@@ -63,6 +67,14 @@ public:
 
 //**********************************************************************************
 
+	//3 assign(con_matrix[i], uniform_minority)
+	//!Function that assigns the con_max and minority population. Pseudo reconstruction of object.
+	void assign(int con_max, int min)
+	{
+		this->con_max = con_max;
+		this->min_pop = min;
+	}
+
 }; //End of class constituency
 //**********************************************************************************
 
@@ -73,7 +85,8 @@ public:
  \param Constituency List - std::vector<Constituency>
  \return String that can be written to a file.
  */
-std::string PrintDist(std::vector<Constituency> &conlist)
+template<long unsigned int SIZE>
+std::string PrintDist(std::array <Constituency, SIZE> &conlist)
 {
 	std::ostringstream buffer;
 	buffer << "Distribution: " << "\n" << "con_max: ";

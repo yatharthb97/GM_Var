@@ -144,7 +144,7 @@ set boxwidth 0.9
 set style fill solid
 plot ARG3 using 1:7 with boxes lc rgb"navy", "" u 1:7:7 with labels offset char 0,1 font 'Verdana,6'
 reset
-#Variance - Histogram/////////////////////////////////////////////////////////
+#Frac Variance - Histogram/////////////////////////////////////////////////////////
 
 
 #6
@@ -213,3 +213,60 @@ plot ARG3 using 1:($2+$3) with boxes lc rgb "red" notitle,\
      
 reset
 #Var Plots//////////////////////////////////////////////////////////////////////
+
+
+
+#8
+#Eff_Gap Plots////////////////////////////////////////////////////////////////////
+reset
+set term pngcairo size 1920, 1080 enhanced font 'Verdana,20'
+out = sprintf("%s%s", ARG1, "_eff_gap.png")
+set output out
+set datafile separator ":"
+
+
+set title "Efficiency Gap Plots"
+
+
+set xrange [0:25]
+set xtics 1
+
+set grid ytics lt 1 lw 1 lc rgb "#bbbbbb"
+set grid xtics lt 1 lw 1 lc rgb "#bbbbbb"
+
+set xlabel "Minority Seats Won"
+set ylabel "Efficiency Gap"
+
+plot ARG4 using 1:2 with linespoints lt rgb "red" lw 3 title "Minimum",\
+     ARG4 using 1:3 with linespoints lt rgb "blue" lw 3  title "Maximum",\
+     ARG4 using 1:4 with linespoints lt rgb "green" lw 3  title "Difference",\
+     ARG4 using 1:5 with linespoints lt rgb "black" lw 3  title "Mean"
+reset
+#Eff_Gap Plots////////////////////////////////////////////////////////////////////
+
+
+#5
+#Eff_Gap_Zero - Histogram/////////////////////////////////////////////////////////reset
+
+set term pngcairo size 1920, 1080 enhanced font 'Verdana,20'
+out = sprintf("%s%s", ARG1, "_zeroeffgap.png")
+set output out
+set datafile separator ":"
+
+t = sprintf("%s%s%s", "Zero Count - Histogram", "\n", "Efficiency Gap")
+set title t
+unset key
+
+set xrange [-1:26]
+set xtics 1
+set xlabel "Minority Seats Won"
+set ylabel "Frequency"
+
+set grid ytics lt 1 lw 1 lc rgb "#bbbbbb"
+set grid xtics lt 1 lw 1 lc rgb "#bbbbbb"
+
+set boxwidth 0.9
+set style fill solid
+plot ARG4 using 1:7 with boxes lc rgb"green", "" u 1:7:7 with labels offset char 0,1 font 'Verdana,6'
+reset
+#Eff_Gap_Zero - Histogram/////////////////////////////////////////////////////////

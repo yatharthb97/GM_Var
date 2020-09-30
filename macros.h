@@ -1,7 +1,7 @@
 #pragma once
 
 //Data Seperator
-#define __DSep__ #:
+#define __DSep__ ':'
 
 //Data Precision on output Streams
 #define __Out_Prec__ 10
@@ -17,7 +17,7 @@
 #define __VARVFRACVAR__
 
 
-//Leave the first __L_F_IT__ before shuffling the con_matrix order
+//Leave the first iteration __L_F_IT__ before shuffling the con_matrix order
 #define __L_F_IT__ 1
 
 
@@ -26,7 +26,14 @@
 //### Machine Epsilon  - 10e-8
 
 
+//Specifies the algorithm used during the mixing of calculations
+#define __MIX_STATE__ 0
+//If Set to 0 ==> Swap Methods
+//If Set to 1 ==> Fill Method
 
+
+//Minimum Fill During Random Assignment ==> __MIX_STATE__ = 1
+#define __MIN_CON_FILL__ 0
 
 
 

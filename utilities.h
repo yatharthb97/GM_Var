@@ -1,10 +1,10 @@
 #pragma once
-#include <stdlib.h>
 #include <iostream>
 #include <string>
 #include <iomanip>
 #include <cmath>
-
+#include <stdlib.h>
+#include <cstring>
 
 //Make System Call
 /*void MakeSysCall(std::string command, std::string stringkey)
@@ -41,7 +41,31 @@ bool SetFile(const std::string &path, const std::string &content)
 
 
 
-void ArrayCopy(int[] to, int[] from, size_t size)
+/*void ArrayCopy(int to[], int from[], int size)
 {
-	memcopy(to, from, size);
+	memcpy(to, from, size);
+}*/
+
+
+
+void ArrayCopy(int* to, int* from, int size)
+{
+	for(int i = 0; i < size; i++)
+	{
+		to[i] = from[i];
+	}
+
+}
+
+template <typename T>
+std::string PrintMatrix(T matrix, int size)
+{
+	std::ostringstream tmp;
+	tmp << "| ";
+	for(int i = 0; i < size; i++)
+	{
+		tmp << matrix[i] << "  ";
+	}
+	tmp << "|";
+	return tmp.str();
 }

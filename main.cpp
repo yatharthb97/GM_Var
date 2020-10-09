@@ -248,7 +248,7 @@ if(MakeDir(newpath))
 
 
 	
-	auto start = high_resolution_clock::now(); /////////Clock - Start////////////
+	auto start = high_resolution_clock::now(); /////////Clock - Start/////////
 
 
 //////////////////////////////////Measurement Loop//////////////////////////

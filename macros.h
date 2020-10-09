@@ -14,7 +14,7 @@
 //#define __DENSITY_PLOT__
 
 //Define toinclude a Var v Var Relation plot.
-#define __VARVFRACVAR__
+#define __VARVFRACVAR__ 0 //0 -> No Action //1 -> Action
 
 
 //Leave the first iteration __L_F_IT__ before shuffling the con_matrix order
@@ -27,7 +27,7 @@
 
 
 //Specifies the algorithm used during the mixing of calculations
-#define __MIX_STATE__ 0
+#define __MIX_STATE__ 1
 //If Set to 0 ==> Swap Methods
 //If Set to 1 ==> Fill Method
 

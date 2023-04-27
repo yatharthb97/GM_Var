@@ -24,21 +24,21 @@ Important Points:
 
 Different Plots Generated (Typical Run):
 
-![No of Seats Won by Minority - Histogram](https://github.com/yatharthb97/GM_Var/blob/master/READ_ME%20Samples/freqhist.png?raw=true)
-![Successful Swaps for Every Constituency](https://github.com/yatharthb97/GM_Var/blob/master/READ_ME%20Samples/swap_plot.png?raw=true)
-![Scatter Plot - Variance v Fractional Variance](https://github.com/yatharthb97/GM_Var/blob/master/READ_ME%20Samples/point5_10%5E7me_4_0_varvfracvar.png?raw=true)
+![No of Seats Won by Minority - Histogram](https://github.com/yatharthb97/GM_Var/blob/c++/READ_ME%20Samples/freqhist.png?raw=true)
+![Successful Swaps for Every Constituency](https://github.com/yatharthb97/GM_Var/blob/c++/READ_ME%20Samples/swap_plot.png?raw=true)
+![Scatter Plot - Variance v Fractional Variance](https://github.com/yatharthb97/GM_Var/blob/c++/READ_ME%20Samples/point5_10%5E7me_4_0_varvfracvar.png?raw=true)
 
 
-![Min_Max_Mean_Diff - Fractional Variance v No of Seats Won](https://github.com/yatharthb97/GM_Var/blob/master/READ_ME%20Samples/Frac_var.png?raw=true)
-![Min_Max_Mean_Diff - Variance v No of Seats Won](https://github.com/yatharthb97/GM_Var/blob/master/READ_ME%20Samples/Frac_var.png?raw=true)
+![Min_Max_Mean_Diff - Fractional Variance v No of Seats Won](https://github.com/yatharthb97/GM_Var/blob/c++/READ_ME%20Samples/Frac_var.png?raw=true)
+![Min_Max_Mean_Diff - Variance v No of Seats Won](https://github.com/yatharthb97/GM_Var/blob/c++/READ_ME%20Samples/Frac_var.png?raw=true)
 
 
-![Seats Won_Lost Avg per Constituency](https://github.com/yatharthb97/GM_Var/blob/master/READ_ME%20Samples/wonlost.png?raw=true)
-![Seat Population Distribution - Averaged](https://github.com/yatharthb97/GM_Var/blob/master/READ_ME%20Samples/minmaj.png?raw=true)
+![Seats Won_Lost Avg per Constituency](https://github.com/yatharthb97/GM_Var/blob/c++/READ_ME%20Samples/wonlost.png?raw=true)
+![Seat Population Distribution - Averaged](https://github.com/yatharthb97/GM_Var/blob/c++/READ_ME%20Samples/minmaj.png?raw=true)
 
 
-![Number of times Zero Variance was recorded for Fractional Variance Plots](https://github.com/yatharthb97/GM_Var/blob/master/READ_ME%20Samples/zerofracvarhist.png?raw=true)
-![Number of times Zero Variance was recorded for Variance Plots](https://github.com/yatharthb97/GM_Var/blob/master/READ_ME%20Samples/zerovarhist.png?raw=true)
+![Number of times Zero Variance was recorded for Fractional Variance Plots](https://github.com/yatharthb97/GM_Var/blob/c++/READ_ME%20Samples/zerofracvarhist.png?raw=true)
+![Number of times Zero Variance was recorded for Variance Plots](https://github.com/yatharthb97/GM_Var/blob/c++/READ_ME%20Samples/zerovarhist.png?raw=true)
 
 --------------------------------------------------------------------
 ***
